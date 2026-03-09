@@ -12,5 +12,5 @@ struct Grade: Identifiable {
     let id: String
     var courseName: String
     var studentName: String
-    var value: Double
+    var value: Int
 }
