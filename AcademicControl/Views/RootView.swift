@@ -19,12 +19,18 @@ struct RootView: View {
 
             case .admin:
                 AdminDashboardView()
+                    .transition(.move(edge: .trailing))
+
 
             case .professor:
                 ProfessorDashboardView()
+                    .transition(.move(edge: .trailing))
+
 
             case .student:
                 StudentDashboardView()
+                    .transition(.move(edge: .trailing))
+
             }
 
         } else {

@@ -7,41 +7,59 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct LoginView: View {
-
-    @Environment(SessionStore.self) private var session
 
     @State private var email = ""
     @State private var password = ""
+    
+    @State private var isLogin = true
 
     var body: some View {
-
-        VStack(spacing: 20) {
-
-            Text("Academic Control")
-                .font(.largeTitle)
-
-            TextField("Email", text: $email)
-                .textFieldStyle(.roundedBorder)
-
-            SecureField("Password", text: $password)
-                .textFieldStyle(.roundedBorder)
-
-            Button("Login") {
-
-                session.login(
-                    email: email,
-                    password: password
-                )
-
+        
+        
+        ZStack {
+            
+            Color.background
+                .ignoresSafeArea()
+            
+            VStack(spacing: 30) {
+                
+                Spacer()
+                
+                // Logo / Title
+                VStack(spacing: 8) {
+                    
+                    Image(systemName: "graduationcap.fill")
+                        .font(.system(size: 60))
+                        .foregroundColor(.primaryC)
+                    
+                    Text("Academic Control")
+                        .font(.title)
+                        .fontWeight(.bold)
+                        .foregroundColor(.textPrimary)
+                    
+                    Text("Manage your academic life")
+                        .font(.subheadline)
+                        .foregroundColor(.textSecondary)
+                }
+                
+                if isLogin {
+                    
+                    LoginCard(isLogin: $isLogin)
+                        .transition(.move(edge: .leading))
+                    
+                } else {
+                    
+                    RegisterCard(isLogin: $isLogin)
+                        .transition(.move(edge: .trailing))
+                    
+                }
+                
+                Spacer()
             }
-            .buttonStyle(.borderedProminent)
-
-        }//: VStack
-        .padding()
+        }
     }
+    
 }
 
 #Preview {
