@@ -8,9 +8,30 @@
 import SwiftUI
 
 struct ProfessorDashboardView: View {
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+
+        NavigationStack {
+
+            List {
+
+                NavigationLink("Take Attendance") {
+                    QRScannerView()
+                }
+
+                NavigationLink("Assign Grades") {
+                    AssignGradesView()
+                }
+
+                NavigationLink("My Schedule") {
+                    ScheduleView()
+                }
+
+            }
+            .navigationTitle("Professor")
+        }
     }
+    
 }
 
 #Preview {
