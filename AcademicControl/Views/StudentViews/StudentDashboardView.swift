@@ -17,10 +17,7 @@ struct StudentDashboardView: View {
         Grade(id: "5", courseName: "Calculus", studentName: "You", value: 69)
     ]
 
-    @State var schedule: [ScheduleItem] = [
-        ScheduleItem(id: "1", courseName: "Math", day: "Monday", time: "10:00"),
-        ScheduleItem(id: "2", courseName: "Physics", day: "Wednesday", time: "12:00")
-    ]
+    @State var schedule: [ScheduleItem] = ScheduleItem.testSchedule
     
     @State private var scrollOffset: Double = 0
 

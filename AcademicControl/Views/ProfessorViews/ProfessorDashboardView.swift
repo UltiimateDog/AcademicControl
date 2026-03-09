@@ -24,7 +24,7 @@ struct ProfessorDashboardView: View {
                 }
 
                 NavigationLink("My Schedule") {
-                    ScheduleView()
+                    
                 }
 
             }

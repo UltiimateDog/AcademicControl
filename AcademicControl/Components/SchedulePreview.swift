@@ -11,59 +11,37 @@ struct SchedulePreview: View {
 
     var schedule: [ScheduleItem]
 
+    private let startHour = 7
+    private let endHour = 20
+    private let hourHeight: CGFloat = 70
+
     var body: some View {
 
         VStack(alignment: .leading, spacing: 12) {
-
-            NavigationLink {
-
-                ScheduleView()
-
-            } label: {
-
-                HStack {
-
-                    Text("Schedule")
-                        .font(.headline)
-                        .foregroundColor(.textPrimary)
-
-                    Spacer()
-
-                    Image(systemName: "chevron.right")
-                        .foregroundColor(.textSecondary)
-                }
+            
+            HStack {
+                
+                Text("Schedule")
+                    .font(.headline)
+                    .foregroundColor(.textPrimary)
+                
             }
-
-            ScrollView(.horizontal, showsIndicators: false) {
-
-                HStack(spacing: 16) {
-
-                    ForEach(schedule) { item in
-
-                        VStack(alignment: .leading, spacing: 6) {
-
-                            Text(item.day)
-                                .font(.caption)
-                                .foregroundColor(.textSecondary)
-
-                            Text(item.courseName)
-                                .font(.headline)
-                                .foregroundColor(.textPrimary)
-
-                            Text(item.time)
-                                .font(.caption)
-                                .foregroundColor(.textSecondary)
-
-                        }
-                        .padding()
-                        .frame(width: 140)
-                        .background(.card)
-                        .cornerRadius(14)
-                        .shadow(radius: 2)
-                    }
+            
+            TabView {
+                
+                ForEach(Weekday.allCases) { day in
+                    DayScheduleView(
+                        day: day,
+                        events: schedule.filter { $0.weekday == day },
+                        startHour: startHour,
+                        endHour: endHour,
+                        hourHeight: hourHeight
+                    )
                 }
+                
             }
-
+            .frame(height: hourHeight * CGFloat(endHour - startHour))
+            .tabViewStyle(.page(indexDisplayMode: .never))
         }
     }
 }
