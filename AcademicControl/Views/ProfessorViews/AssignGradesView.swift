@@ -1,5 +1,5 @@
 //
-//  AssignGradesView.swift
+//  AssignGradesFullView.swift
 //  AcademicControl
 //
 //  Created by Ultiimate Dog on 09/03/26.
@@ -9,44 +9,70 @@ import SwiftUI
 
 struct AssignGradesView: View {
 
-    @State var grades: [Grade] = [
-        Grade(id: "1", courseName: "Math", studentName: "Student A", value: 90),
-        Grade(id: "2", courseName: "Math", studentName: "Student B", value: 85)
-    ]
+    @Binding var grades: [Grade]
 
     var body: some View {
 
         List {
 
-            ForEach($grades) { $grade in
+            Section {
 
-                HStack {
-
-                    Text(grade.studentName)
-
-                    Spacer()
-
-                    TextField(
-                        "Grade",
-                        value: $grade.value,
-                        format: .number
-                    )
-                    .frame(width: 60)
-                    .textFieldStyle(.roundedBorder)
-
+                ForEach($grades) { $grade in
+                    gradeRow(grade: $grade)
                 }
+
+            } header: {
+                Text("\(grades.count) Students")
             }
 
         }
-        .navigationTitle("Assign Grades")
-        .onAppear {
+        .listStyle(.insetGrouped)
+        .navigationTitle("All Students")
+    }
 
-            // TODO: Fetch enrolled students
+    // MARK: Row
+
+    func gradeRow(grade: Binding<Grade>) -> some View {
+
+        HStack(spacing: 12) {
+
+            // Student info
+            VStack(alignment: .leading, spacing: 4) {
+
+                Text(grade.wrappedValue.studentName)
+                    .font(.body)
+                    .fontWeight(.medium)
+
+                Text(grade.wrappedValue.courseName)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+
+            }
+
+            Spacer()
+
+            // Grade input
+            TextField(
+                "0",
+                value: grade.value,
+                format: .number
+            )
+            .keyboardType(.numberPad)
+            .frame(width: 60)
+            .padding(6)
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(.primaryC.opacity(0.2))
+            )
+            .multilineTextAlignment(.center)
 
         }
+        .padding(.vertical, 6)
     }
 }
 
 #Preview {
-    AssignGradesView()
+    NavigationStack {
+        AssignGradesView(grades: .constant(Grade.testGrades))
+    }
 }

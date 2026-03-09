@@ -8,26 +8,30 @@
 import SwiftUI
 
 struct ProfessorDashboardView: View {
+    
+    @State var schedule: [ScheduleItem] = ScheduleItem.testSchedule
 
     var body: some View {
-
+        
         NavigationStack {
-
-            List {
-
-                NavigationLink("Take Attendance") {
-                    QRScannerView()
-                }
-
-                NavigationLink("Assign Grades") {
-                    AssignGradesView()
-                }
-
-                NavigationLink("My Schedule") {
+            
+            ScrollView {
+                
+                VStack(spacing: 20) {
+                    
+                    CamaraCard()
+                    
+                    AssignGradesPreview()
+                        .frame(height: 370)
+                    
+                    SchedulePreview(schedule: schedule)
                     
                 }
-
+                .padding()
+                
             }
+            .scrollIndicators(.hidden)
+            .background(Color.background)
             .navigationTitle("Professor")
         }
     }
