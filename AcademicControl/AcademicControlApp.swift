@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct AcademicControlApp: App {
+    @State private var session: SessionStore = .init()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
+                .environment(session)
         }
     }
 }
