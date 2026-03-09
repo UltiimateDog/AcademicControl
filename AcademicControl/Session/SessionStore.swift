@@ -24,6 +24,14 @@ class SessionStore {
             email: email,
             role: .student
         )
+        
+        if email == "admin" {
+            currentUser?.role = .admin
+        }
+        
+        if email == "prof" {
+            currentUser?.role = .professor
+        }
     }
 
     func logout() {
