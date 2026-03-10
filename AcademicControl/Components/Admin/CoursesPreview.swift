@@ -1,5 +1,5 @@
 //
-//  ManageUsersPreview.swift
+//  CoursesPreview.swift
 //  AcademicControl
 //
 //  Created by Ultiimate Dog on 09/03/26.
@@ -7,30 +7,30 @@
 
 import SwiftUI
 
-struct ManageUsersPreview: View {
-
-    @State var users: [User] = User.testUsers
-
-    var groupedUsers: [[User]] {
-        users.chunked(into: 4)
+struct CoursesPreview: View {
+    
+    @State private var courses: [Course] = Course.testCourses
+    
+    var groupedCourses: [[Course]] {
+        courses.chunked(into: 4)
     }
-
+    
     var body: some View {
 
         VStack(spacing: 16) {
 
             NavigationLink {
-                ManageUsersView(users: $users)
+                CreateCourseView(courses: $courses)
             } label: {
 
                 HStack {
 
                     VStack(alignment: .leading, spacing: 4) {
 
-                        Text("Manage Users")
+                        Text("Manage Courses")
                             .font(.headline)
 
-                        Text("Students and professors")
+                        Text("Create and Edit")
                             .font(.caption)
                             .foregroundColor(.secondary)
 
@@ -50,12 +50,12 @@ struct ManageUsersPreview: View {
 
             TabView {
 
-                ForEach(groupedUsers.indices, id: \.self) { index in
+                ForEach(groupedCourses.indices, id: \.self) { index in
 
                     VStack(spacing: 12) {
 
-                        ForEach(groupedUsers[index]) { user in
-                            userRow(user)
+                        ForEach(groupedCourses[index]) { course in
+                            courseRow(course)
                         }
 
                         Spacer()
@@ -63,23 +63,26 @@ struct ManageUsersPreview: View {
                     .padding(5)
                 }
 
+
             }
             .tabViewStyle(.page)
 
         }
-        .padding([.top, .horizontal])
+        .padding([.bottom, .horizontal])
     }
-
-    func userRow(_ user: User) -> some View {
+    
+    // MARK: - Course Row
+    
+    func courseRow(_ course: Course) -> some View {
 
         HStack {
 
             VStack(alignment: .leading, spacing: 4) {
 
-                Text(user.name)
+                Text(course.name)
                     .fontWeight(.medium)
 
-                Text(user.email)
+                Text(course.professorName)
                     .font(.caption)
                     .foregroundColor(.secondary)
 
@@ -87,7 +90,13 @@ struct ManageUsersPreview: View {
 
             Spacer()
 
-            roleBadge(user.role)
+            Text("\(course.students.count) Students")
+                .font(.caption)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 4)
+                .background(.accent.opacity(0.2))
+                .clipShape(Capsule())
+            
         }
         .padding()
         .background(
@@ -96,18 +105,8 @@ struct ManageUsersPreview: View {
                 .shadow(color: .black.opacity(0.05), radius: 4, y: 2)
         )
     }
-
-    func roleBadge(_ role: User.Role) -> some View {
-
-        Text(role.rawValue.capitalized)
-            .font(.caption)
-            .padding(.horizontal, 10)
-            .padding(.vertical, 4)
-            .background(.accent.opacity(0.2))
-            .clipShape(Capsule())
-    }
 }
 
 #Preview {
-    ManageUsersPreview()
+    CoursesPreview()
 }

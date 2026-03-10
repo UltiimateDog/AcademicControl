@@ -14,12 +14,16 @@ struct AdminDashboardView: View {
         NavigationStack {
             
             ScrollView {
-                ManageUsersPreview()
-                    .frame(height: 460)
-                
-                NavigationLink("Create Course") {
-                    CreateCourseView()
+                VStack (spacing: 0) {
+                    
+                    ManageUsersPreview()
+                        .frame(height: 460)
+                    
+                    CoursesPreview()
+                        .frame(height: 460)
+                    
                 }
+                
             }
             .scrollIndicators(.hidden)
             .background(Color.background)
