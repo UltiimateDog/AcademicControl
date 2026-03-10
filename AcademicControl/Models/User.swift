@@ -19,4 +19,12 @@ struct User: Identifiable {
     var name: String
     var email: String
     var role: Role
+    
+    static let testUsers: [User] = [
+        User(id: "1", name: "Alice", email: "alice@mail.com", role: .student),
+        User(id: "2", name: "Bob", email: "bob@mail.com", role: .professor),
+        User(id: "3", name: "Carol", email: "carol@mail.com", role: .student),
+        User(id: "4", name: "David", email: "david@mail.com", role: .student),
+        User(id: "5", name: "Eva", email: "eva@mail.com", role: .professor)
+    ]
 }

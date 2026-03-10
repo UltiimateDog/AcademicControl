@@ -9,31 +9,44 @@ import SwiftUI
 
 struct ManageUsersView: View {
 
-    @State var users: [User] = [
-        User(id: "1", name: "Alice", email: "alice@mail.com", role: .student),
-        User(id: "2", name: "Bob", email: "bob@mail.com", role: .professor)
-    ]
+    @Binding var users: [User]
 
     var body: some View {
 
-        List(users) { user in
+        List {
 
-            HStack {
+            Section {
 
-                VStack(alignment: .leading) {
+                ForEach($users) { $user in
 
-                    Text(user.name)
+                    HStack {
 
-                    Text(user.email)
-                        .font(.caption)
+                        VStack(alignment: .leading, spacing: 4) {
+
+                            Text(user.name)
+                                .fontWeight(.medium)
+
+                            Text(user.email)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+
+                        }
+
+                        Spacer()
+
+                        roleSelector(user: $user)
+
+                    }
+                    .padding(.vertical, 4)
 
                 }
 
-                Spacer()
-
-                Text(user.role.rawValue)
+            } header: {
+                Text("\(users.count) Users")
             }
+
         }
+        .listStyle(.insetGrouped)
         .navigationTitle("Users")
         .onAppear {
 
@@ -41,9 +54,43 @@ struct ManageUsersView: View {
 
         }
     }
-    
+
+    // MARK: Role Selector
+
+    func roleSelector(user: Binding<User>) -> some View {
+
+        Menu {
+
+            Button("Student") {
+                user.wrappedValue.role = .student
+                // TODO: Update role in backend
+            }
+
+            Button("Professor") {
+                user.wrappedValue.role = .professor
+                // TODO: Update role in backend
+            }
+
+        } label: {
+
+            HStack(spacing: 4) {
+
+                Text(user.wrappedValue.role.rawValue.capitalized)
+                    .font(.caption)
+
+                Image(systemName: "chevron.down")
+                    .font(.caption2)
+
+            }
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .background(Color(.systemGray5))
+            .clipShape(Capsule())
+
+        }
+    }
 }
 
 #Preview {
-    ManageUsersView()
+    ManageUsersView(users: .constant([]))
 }

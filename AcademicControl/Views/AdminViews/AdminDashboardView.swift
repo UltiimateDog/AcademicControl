@@ -10,20 +10,19 @@ import SwiftUI
 struct AdminDashboardView: View {
 
     var body: some View {
-
+        
         NavigationStack {
-
-            List {
-
-                NavigationLink("Manage Users") {
-                    ManageUsersView()
-                }
-
+            
+            ScrollView {
+                ManageUsersPreview()
+                    .frame(height: 460)
+                
                 NavigationLink("Create Course") {
                     CreateCourseView()
                 }
-
             }
+            .scrollIndicators(.hidden)
+            .background(Color.background)
             .navigationTitle("Admin")
         }
     }
