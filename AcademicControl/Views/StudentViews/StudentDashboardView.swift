@@ -6,35 +6,35 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 struct StudentDashboardView: View {
 
-    @State var grades: [Grade] = [
-        Grade(id: "1", courseName: "Math", studentName: "You", value: 95),
-        Grade(id: "2", courseName: "Physics", studentName: "You", value: 88),
-        Grade(id: "3", courseName: "Chemestry", studentName: "You", value: 75),
-        Grade(id: "4", courseName: "Arts", studentName: "You", value: 82),
-        Grade(id: "5", courseName: "Calculus", studentName: "You", value: 69)
-    ]
-
-    @State var schedule: [ScheduleItem] = ScheduleItem.testSchedule
-    
+    @State private var grades: [Grade] = []
+    @State private var schedule: [ScheduleItem] = []
+    @State private var isLoading = true
     @State private var scrollOffset: Double = 0
+    private let viewModel = CourseViewModel()
 
     var body: some View {
-        
+
         NavigationStack {
-            
+
             ScrollView {
-                
+
                 VStack(spacing: 20) {
-                    
+
                     QRHeader(offset: scrollOffset)
-                    
-                    GradesSummaryCard(grades: grades)
-                    
-                    SchedulePreview(schedule: schedule)
-                    
+
+                    if isLoading {
+                        ProgressView("Loading...")
+                            .padding()
+                    } else {
+                        GradesSummaryCard(grades: grades)
+
+                        SchedulePreview(schedule: schedule)
+                    }
+
                 }
                 .padding()
             }
@@ -46,9 +46,33 @@ struct StudentDashboardView: View {
             } action: { _, newValue in
                 scrollOffset = newValue
             }
-            
-        }//: Nav
-        
+            .onAppear {
+                loadData()
+            }
+        }
+    }
+
+    private func loadData() {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        isLoading = true
+
+        let group = DispatchGroup()
+
+        group.enter()
+        viewModel.fetchScheduleForStudent(uid: uid) { items in
+            self.schedule = items
+            group.leave()
+        }
+
+        group.enter()
+        viewModel.fetchGradesForStudent(uid: uid) { fetchedGrades in
+            self.grades = fetchedGrades
+            group.leave()
+        }
+
+        group.notify(queue: .main) {
+            self.isLoading = false
+        }
     }
 }
 

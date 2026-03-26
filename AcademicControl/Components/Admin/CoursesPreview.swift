@@ -20,7 +20,7 @@ struct CoursesPreview: View {
         VStack(spacing: 16) {
 
             NavigationLink {
-                CreateCourseView(courses: $courses)
+                CreateCourseView()
             } label: {
 
                 HStack {
