@@ -8,6 +8,13 @@
 import SwiftUI
 
 struct CamaraCard: View {
+
+    // Recibe los cursos del profesor desde ProfessorDashboardView
+    let courses: [Course]
+
+    @State private var selectedCourse: Course? = nil
+    @State private var showPicker = false
+
     var body: some View {
         VStack(spacing: 16) {
 
@@ -18,34 +25,78 @@ struct CamaraCard: View {
             Text("Scan Attendance QR")
                 .font(.headline)
 
-            Text("Use the camera to scan the QR code displayed by students to register attendance.")
+            Text("Select a course, then scan the QR code shown by the student.")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
 
-            NavigationLink {
+            // ── Course picker ──
+            if courses.isEmpty {
+                Text("No courses assigned")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            } else {
+                Button {
+                    showPicker = true
+                } label: {
+                    HStack {
+                        Image(systemName: "books.vertical")
+                        Text(selectedCourse?.name ?? "Select course…")
+                            .fontWeight(.medium)
+                        Spacer()
+                        Image(systemName: "chevron.down")
+                            .font(.caption)
+                    }
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color(.systemGray5))
+                    )
+                }
+                .foregroundStyle(.primary)
+                .confirmationDialog("Select a course", isPresented: $showPicker, titleVisibility: .visible) {
+                    ForEach(courses) { course in
+                        Button(course.name) {
+                            selectedCourse = course
+                        }
+                    }
+                    Button("Cancel", role: .cancel) {}
+                }
+            }
 
-                QRScannerCameraView()
-
-            } label: {
-
+            // ── Scan button (only active when a course is selected) ──
+            if let course = selectedCourse {
+                NavigationLink {
+                    QRScannerCameraView(
+                        professorCourseId: course.id,
+                        professorCourseName: course.name
+                    )
+                } label: {
+                    HStack {
+                        Image(systemName: "camera")
+                        Text("Start Scanning — \(course.name)")
+                    }
+                    .font(.headline)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(.accent)
+                    .foregroundColor(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+            } else {
+                // Disabled state
                 HStack {
-
                     Image(systemName: "camera")
-
                     Text("Start Scanning")
-
                 }
                 .font(.headline)
                 .frame(maxWidth: .infinity)
                 .padding()
-                .background(.accent)
+                .background(Color(.systemGray4))
                 .foregroundColor(.white)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
-
             }
-
         }
         .padding(28)
         .frame(maxWidth: .infinity)
@@ -57,5 +108,8 @@ struct CamaraCard: View {
 }
 
 #Preview {
-    CamaraCard()
+    NavigationStack {
+        CamaraCard(courses: Course.testCourses)
+            .padding()
+    }
 }
