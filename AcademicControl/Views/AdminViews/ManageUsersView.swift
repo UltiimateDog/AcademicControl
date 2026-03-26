@@ -10,7 +10,7 @@ import FirebaseAuth
 
 struct ManageUsersView: View {
 
-    @State private var viewModel = AdminViewModel()
+    @Binding var viewModel: AdminViewModel
 
     var body: some View {
 
@@ -49,8 +49,6 @@ struct ManageUsersView: View {
         .listStyle(.insetGrouped)
         .navigationTitle("Users")
         .onAppear {
-            print(Auth.auth().currentUser?.uid ?? "No user")
-            
             viewModel.fetchUsers()
         }
         .alert("Error", isPresented: .constant(viewModel.errorMessage != nil)) {
@@ -106,6 +104,6 @@ struct ManageUsersView: View {
 
 #Preview {
     NavigationStack {
-        ManageUsersView()
+        ManageUsersView(viewModel: .constant(.init()))
     }
 }

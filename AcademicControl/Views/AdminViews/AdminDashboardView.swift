@@ -36,5 +36,8 @@ struct AdminDashboardView: View {
 }
 
 #Preview {
+    @Previewable @State var session = Session()
+    
     AdminDashboardView()
+        .environment(session)
 }

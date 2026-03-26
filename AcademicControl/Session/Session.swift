@@ -16,6 +16,20 @@ import FirebaseCore
 class Session {
 
     var currentUser: User?
+    
+    // MARK: - Start
+    
+    func start() {
+        Auth.auth().addStateDidChangeListener { _, user in
+            if let user = user {
+                self.fetchAndSetUser(uid: user.uid)
+            } else {
+                DispatchQueue.main.async {
+                    self.currentUser = nil
+                }
+            }
+        }
+    }
 
     // MARK: - Fetch user from Firestore (reads the real role)
     private func fetchAndSetUser(uid: String) {

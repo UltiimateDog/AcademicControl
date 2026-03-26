@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct ManageUsersPreview: View {
-
-    @State var users: [User] = User.testUsers
+    
+    @State private var viewModel = AdminViewModel()
 
     var groupedUsers: [[User]] {
-        users.chunked(into: 4)
+        viewModel.users.chunked(into: 4)
     }
 
     var body: some View {
@@ -20,7 +20,7 @@ struct ManageUsersPreview: View {
         VStack(spacing: 16) {
 
             NavigationLink {
-                ManageUsersView()
+                ManageUsersView(viewModel: $viewModel)
             } label: {
 
                 HStack {
@@ -47,27 +47,39 @@ struct ManageUsersPreview: View {
                         .fill(Color(.systemGray6))
                 )
             }
-
-            TabView {
-
-                ForEach(groupedUsers.indices, id: \.self) { index in
-
-                    VStack(spacing: 12) {
-
-                        ForEach(groupedUsers[index]) { user in
-                            userRow(user)
-                        }
-
-                        Spacer()
-                    }
-                    .padding(5)
+            
+            
+            if viewModel.isLoading {
+                HStack {
+                    Spacer()
+                    ProgressView()
+                    Spacer()
                 }
-
+            } else {
+                TabView {
+                    
+                    ForEach(groupedUsers.indices, id: \.self) { index in
+                        
+                        VStack(spacing: 12) {
+                            
+                            ForEach(groupedUsers[index]) { user in
+                                userRow(user)
+                            }
+                            
+                            Spacer()
+                        }
+                        .padding(5)
+                    }
+                    
+                }
+                .tabViewStyle(.page)
             }
-            .tabViewStyle(.page)
 
         }
         .padding([.top, .horizontal])
+        .onAppear {
+            viewModel.fetchUsers()
+        }
     }
 
     func userRow(_ user: User) -> some View {
