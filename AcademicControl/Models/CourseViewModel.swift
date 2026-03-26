@@ -28,7 +28,8 @@ class CourseViewModel {
                     name: data["name"] as? String ?? "",
                     professorId: data["professorId"] as? String ?? "",
                     professorName: data["professorName"] as? String ?? "",
-                    students: []
+                    students: [],
+                    scheduleItems: [] // <--- Agregamos esta línea para corregir el error
                 )
             } ?? []
         }

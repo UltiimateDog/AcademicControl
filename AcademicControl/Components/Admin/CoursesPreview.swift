@@ -1,10 +1,3 @@
-//
-//  CoursesPreview.swift
-//  AcademicControl
-//
-//  Created by Ultiimate Dog on 09/03/26.
-//
-
 import SwiftUI
 
 struct CoursesPreview: View {
@@ -12,36 +5,26 @@ struct CoursesPreview: View {
     @Bindable var viewModel: AdminViewModel
     
     var groupedCourses: [[Course]] {
+        // Asegúrate de tener la extensión 'chunked' definida en tu proyecto
         viewModel.courses.chunked(into: 4)
     }
     
     var body: some View {
-
         VStack(spacing: 16) {
-
             NavigationLink {
-<<<<<<< HEAD
+                // Solo una llamada y sin argumentos,
+                // ya que CreateCourseView maneja su propio ViewModel internamente
                 CreateCourseView()
-=======
-                CreateCourseView(viewModel: viewModel)
->>>>>>> 44630298a03e97b0433bc6702af16b6d2b91f93d
             } label: {
-
                 HStack {
-
                     VStack(alignment: .leading, spacing: 4) {
-
                         Text("Manage Courses")
                             .font(.headline)
-
                         Text("Create and Edit")
                             .font(.caption)
                             .foregroundColor(.secondary)
-
                     }
-
                     Spacer()
-
                     Image(systemName: "chevron.right")
                         .foregroundColor(.secondary)
                 }
@@ -53,24 +36,17 @@ struct CoursesPreview: View {
             }
 
             TabView {
-
                 ForEach(groupedCourses.indices, id: \.self) { index in
-
                     VStack(spacing: 12) {
-
                         ForEach(groupedCourses[index]) { course in
                             courseRow(course)
                         }
-
                         Spacer()
                     }
                     .padding(5)
                 }
-
-
             }
             .tabViewStyle(.page)
-
         }
         .padding([.bottom, .horizontal])
         .onAppear {
@@ -79,31 +55,22 @@ struct CoursesPreview: View {
     }
     
     // MARK: - Course Row
-    
     func courseRow(_ course: Course) -> some View {
-
         HStack {
-
             VStack(alignment: .leading, spacing: 4) {
-
                 Text(course.name)
                     .fontWeight(.medium)
-
-                Text(course.professorName)
+                Text(course.professorName.isEmpty ? "No professor" : course.professorName)
                     .font(.caption)
                     .foregroundColor(.secondary)
-
             }
-
             Spacer()
-
             Text("\(course.students.count) Students")
                 .font(.caption)
                 .padding(.horizontal, 10)
                 .padding(.vertical, 4)
                 .background(.accent.opacity(0.2))
                 .clipShape(Capsule())
-            
         }
         .padding()
         .background(
@@ -115,5 +82,6 @@ struct CoursesPreview: View {
 }
 
 #Preview {
-    CoursesPreview(viewModel: .init())
+    // Para el preview, asegúrate de que AdminViewModel sea inicializable así
+    CoursesPreview(viewModel: AdminViewModel())
 }
