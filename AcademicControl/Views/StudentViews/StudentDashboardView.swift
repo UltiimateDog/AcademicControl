@@ -35,6 +35,8 @@ struct StudentDashboardView: View {
                     
                     SchedulePreview(schedule: schedule)
                     
+                    LogoutButton()
+                        .padding()
                 }
                 .padding()
             }
@@ -53,5 +55,8 @@ struct StudentDashboardView: View {
 }
 
 #Preview {
+    @Previewable @State var session = Session()
+    
     StudentDashboardView()
+        .environment(session)
 }

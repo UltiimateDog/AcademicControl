@@ -22,6 +22,8 @@ struct AdminDashboardView: View {
                     CoursesPreview()
                         .frame(height: 460)
                     
+                    LogoutButton()
+                        .padding()
                 }
                 
             }

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 struct ManageUsersView: View {
 
@@ -48,6 +49,8 @@ struct ManageUsersView: View {
         .listStyle(.insetGrouped)
         .navigationTitle("Users")
         .onAppear {
+            print(Auth.auth().currentUser?.uid ?? "No user")
+            
             viewModel.fetchUsers()
         }
         .alert("Error", isPresented: .constant(viewModel.errorMessage != nil)) {

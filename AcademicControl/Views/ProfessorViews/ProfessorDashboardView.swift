@@ -26,6 +26,8 @@ struct ProfessorDashboardView: View {
                     
                     SchedulePreview(schedule: schedule)
                     
+                    LogoutButton()
+                        .padding()
                 }
                 .padding()
                 
