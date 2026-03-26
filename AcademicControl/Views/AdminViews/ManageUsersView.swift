@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ManageUsersView: View {
 
-    @Binding var users: [User]
+    @State private var viewModel = AdminViewModel()
 
     var body: some View {
 
@@ -17,80 +17,92 @@ struct ManageUsersView: View {
 
             Section {
 
-                ForEach($users) { $user in
-
+                if viewModel.isLoading {
                     HStack {
-
-                        VStack(alignment: .leading, spacing: 4) {
-
-                            Text(user.name)
-                                .fontWeight(.medium)
-
-                            Text(user.email)
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-
-                        }
-
                         Spacer()
-
-                        roleSelector(user: $user)
-
+                        ProgressView()
+                        Spacer()
                     }
-                    .padding(.vertical, 4)
-
+                } else {
+                    ForEach(viewModel.users) { user in
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(user.name)
+                                    .fontWeight(.medium)
+                                Text(user.email)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            Spacer()
+                            roleSelector(user: user)
+                        }
+                        .padding(.vertical, 4)
+                    }
                 }
 
             } header: {
-                Text("\(users.count) Users")
+                Text("\(viewModel.users.count) Users")
             }
 
         }
         .listStyle(.insetGrouped)
         .navigationTitle("Users")
         .onAppear {
-
-            // TODO: Fetch users from backend
-
+            viewModel.fetchUsers()
+        }
+        .alert("Error", isPresented: .constant(viewModel.errorMessage != nil)) {
+            Button("OK") { viewModel.errorMessage = nil }
+        } message: {
+            Text(viewModel.errorMessage ?? "")
         }
     }
 
-    // MARK: Role Selector
+    // MARK: - Role Selector
 
-    func roleSelector(user: Binding<User>) -> some View {
+    func roleSelector(user: User) -> some View {
 
         Menu {
 
             Button("Student") {
-                user.wrappedValue.role = .student
-                // TODO: Update role in backend
+                viewModel.updateRole(for: user, to: .student)
             }
 
             Button("Professor") {
-                user.wrappedValue.role = .professor
-                // TODO: Update role in backend
+                viewModel.updateRole(for: user, to: .professor)
+            }
+
+            Button("Admin") {
+                viewModel.updateRole(for: user, to: .admin)
             }
 
         } label: {
 
             HStack(spacing: 4) {
-
-                Text(user.wrappedValue.role.rawValue.capitalized)
+                Text(user.role.rawValue.capitalized)
                     .font(.caption)
-
                 Image(systemName: "chevron.down")
                     .font(.caption2)
-
             }
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
-            .background(Color(.systemGray5))
+            .background(roleColor(user.role).opacity(0.2))
             .clipShape(Capsule())
+        }
+    }
 
+    // MARK: - Role color
+
+    func roleColor(_ role: User.Role) -> Color {
+        switch role {
+        case .admin:    return .red
+        case .professor: return .blue
+        case .student:  return .accent
         }
     }
 }
 
 #Preview {
-    ManageUsersView(users: .constant([]))
+    NavigationStack {
+        ManageUsersView()
+    }
 }

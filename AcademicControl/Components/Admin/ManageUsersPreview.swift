@@ -20,7 +20,7 @@ struct ManageUsersPreview: View {
         VStack(spacing: 16) {
 
             NavigationLink {
-                ManageUsersView(users: $users)
+                ManageUsersView()
             } label: {
 
                 HStack {
