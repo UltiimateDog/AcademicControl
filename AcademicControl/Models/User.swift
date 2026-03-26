@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct User: Identifiable {
+struct User: Identifiable, Hashable {
 
     enum Role: String, Codable {
         case admin

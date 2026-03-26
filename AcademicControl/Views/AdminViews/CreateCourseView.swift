@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CreateCourseView: View {
 
+<<<<<<< HEAD
     @State private var viewModel = CourseViewModel()
     @State private var showCreateSheet = false
 
@@ -25,10 +26,21 @@ struct CreateCourseView: View {
     @State private var newStartMinute: Int = 0
     @State private var newEndHour: Int = 9
     @State private var newEndMinute: Int = 0
+=======
+    @State private var name = ""
+    @State private var selectedProfessor: User?
+    
+    @State private var showCreateSheet = false
+    
+    @State private var selectedCourse: Course?
+    
+    @Bindable var viewModel: AdminViewModel
+>>>>>>> 44630298a03e97b0433bc6702af16b6d2b91f93d
 
     var body: some View {
         List {
             Section {
+<<<<<<< HEAD
                 if viewModel.isLoading {
                     HStack { Spacer(); ProgressView(); Spacer() }
                 } else {
@@ -44,6 +56,36 @@ struct CreateCourseView: View {
                             Spacer()
                         }
                         .padding(.vertical, 4)
+=======
+
+                ForEach(viewModel.courses) { course in
+
+                    Button {
+                        selectedCourse = course
+                    } label: {
+                        HStack {
+
+                            VStack(alignment: .leading, spacing: 4) {
+
+                                Text(course.name)
+                                    .fontWeight(.medium)
+
+                                Text(course.professorName)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+
+                            }
+
+                            Spacer()
+
+                            Text("\(course.students.count) Students")
+                                .font(.caption)
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 4)
+                                .background(.accent.opacity(0.2))
+                                .clipShape(Capsule())
+                        }
+>>>>>>> 44630298a03e97b0433bc6702af16b6d2b91f93d
                     }
                 }
             } header: {
@@ -57,12 +99,13 @@ struct CreateCourseView: View {
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(.primaryC)
-                    .foregroundColor(.white)
+                    .foregroundStyle(.white)
                     .cornerRadius(10)
             }
         }
         .listStyle(.insetGrouped)
         .navigationTitle("Courses")
+<<<<<<< HEAD
         .onAppear {
             viewModel.fetchCourses()
             viewModel.fetchUsers()
@@ -71,6 +114,10 @@ struct CreateCourseView: View {
             Button("OK") { viewModel.errorMessage = nil }
         } message: {
             Text(viewModel.errorMessage ?? "")
+=======
+        .sheet(item: $selectedCourse) { course in
+            EditCourseView(course: course, viewModel: viewModel)
+>>>>>>> 44630298a03e97b0433bc6702af16b6d2b91f93d
         }
         .sheet(isPresented: $showCreateSheet) {
             createCourseSheet
@@ -83,9 +130,45 @@ struct CreateCourseView: View {
         NavigationStack {
             Form {
 
+<<<<<<< HEAD
                 // Course name
                 Section("Course name") {
                     TextField("e.g. Mathematics", text: $newCourseName)
+=======
+                TextField("Course name", text: $name)
+                
+                Section("Professor") {
+
+                    if viewModel.professors.isEmpty {
+                        
+                        Text("No professors available")
+                            .foregroundColor(.secondary)
+                        
+                    } else {
+                        
+                        Picker("Select Professor", selection: $selectedProfessor) {
+                            
+                            Text("None")
+                                .tag(User?.none)
+                            
+                            
+                            ForEach(viewModel.professors) { professor in
+                                Text(professor.name)
+                                    .tag(Optional(professor))
+                            }
+                            
+                            
+                        }
+                        .pickerStyle(.menu)
+                        
+                    }
+                    
+                    if let selectedProfessor {
+                        Text("Selected: \(selectedProfessor.name)")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+>>>>>>> 44630298a03e97b0433bc6702af16b6d2b91f93d
                 }
 
                 // Professor picker
@@ -111,6 +194,7 @@ struct CreateCourseView: View {
                     }
                 }
 
+<<<<<<< HEAD
                 // Students picker
                 Section("Students") {
                     if viewModel.students.isEmpty {
@@ -158,8 +242,20 @@ struct CreateCourseView: View {
                     Button("+ Add time slot") {
                         showAddSchedule = true
                     }
-                }
+=======
+                    guard !name.isEmpty,
+                          let professor = selectedProfessor else {
+                        return
+                    }
 
+                    viewModel.createCourse(name: name, professor: professor)
+
+                    // Reset UI
+                    name = ""
+                    selectedProfessor = nil
+                    showCreateSheet = false
+>>>>>>> 44630298a03e97b0433bc6702af16b6d2b91f93d
+                }
             }
             .navigationTitle("New Course")
             .navigationBarTitleDisplayMode(.inline)
@@ -181,6 +277,7 @@ struct CreateCourseView: View {
                 addScheduleSheet
             }
         }
+<<<<<<< HEAD
     }
 
     // MARK: - Add Schedule Sheet
@@ -226,6 +323,17 @@ struct CreateCourseView: View {
                     }
                 }
             }
+=======
+        .onAppear {
+            if viewModel.users.isEmpty {
+                viewModel.fetchUsers()
+            }
+        }
+        .alert("Error", isPresented: .constant(viewModel.errorMessage != nil)) {
+            Button("OK") { viewModel.errorMessage = nil }
+        } message: {
+            Text(viewModel.errorMessage ?? "")
+>>>>>>> 44630298a03e97b0433bc6702af16b6d2b91f93d
         }
     }
 
@@ -255,7 +363,11 @@ struct CreateCourseView: View {
 }
 
 #Preview {
+<<<<<<< HEAD
     NavigationStack {
         CreateCourseView()
     }
+=======
+    CreateCourseView(viewModel: .init())
+>>>>>>> 44630298a03e97b0433bc6702af16b6d2b91f93d
 }
