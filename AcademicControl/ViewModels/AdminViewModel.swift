@@ -17,6 +17,10 @@ class AdminViewModel {
     
     var courses: [Course] = []
     
+    var professors: [User] {
+        users.filter { $0.role == .professor }
+    }
+    
     private let db = Firestore.firestore()
     
     // MARK: - Fetch all users from Firestore

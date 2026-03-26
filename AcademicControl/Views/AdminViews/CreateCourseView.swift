@@ -10,6 +10,7 @@ import SwiftUI
 struct CreateCourseView: View {
 
     @State private var name = ""
+    @State private var selectedProfessor: User?
     
     @State private var showCreateSheet = false
     
@@ -66,7 +67,7 @@ struct CreateCourseView: View {
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(.primaryC)
-                    .foregroundColor(.white)
+                    .foregroundStyle(.white)
                     .cornerRadius(10)
                 
             }
@@ -78,14 +79,60 @@ struct CreateCourseView: View {
             Form {
 
                 TextField("Course name", text: $name)
+                
+                Section("Professor") {
+
+                    if viewModel.professors.isEmpty {
+                        
+                        Text("No professors available")
+                            .foregroundColor(.secondary)
+                        
+                    } else {
+                        
+                        Picker("Select Professor", selection: $selectedProfessor) {
+                            
+                            Text("None")
+                                .tag(User?.none)
+                            
+                            
+                            ForEach(viewModel.professors) { professor in
+                                Text(professor.name)
+                                    .tag(Optional(professor))
+                            }
+                            
+                            
+                        }
+                        .pickerStyle(.menu)
+                        
+                    }
+                    
+                    if let selectedProfessor {
+                        Text("Selected: \(selectedProfessor.name)")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
 
                 Button("Create") {
-                    viewModel.createCourse(name: name, professor: .init(id: "", name: "", email: "", role: .professor) )
+
+                    guard !name.isEmpty,
+                          let professor = selectedProfessor else {
+                        return
+                    }
+
+                    viewModel.createCourse(name: name, professor: professor)
+
+                    // Reset UI
+                    name = ""
+                    selectedProfessor = nil
+                    showCreateSheet = false
                 }
             }
         }
         .onAppear {
-            viewModel.fetchUsers()
+            if viewModel.users.isEmpty {
+                viewModel.fetchUsers()
+            }
         }
         .alert("Error", isPresented: .constant(viewModel.errorMessage != nil)) {
             Button("OK") { viewModel.errorMessage = nil }
