@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ManageUsersPreview: View {
     
-    @State private var viewModel = AdminViewModel()
+    @Binding var viewModel: AdminViewModel
 
     var groupedUsers: [[User]] {
         viewModel.users.chunked(into: 4)
@@ -121,5 +121,5 @@ struct ManageUsersPreview: View {
 }
 
 #Preview {
-    ManageUsersPreview()
+    ManageUsersPreview(viewModel: .constant(.init()))
 }

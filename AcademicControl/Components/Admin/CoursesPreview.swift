@@ -9,10 +9,10 @@ import SwiftUI
 
 struct CoursesPreview: View {
     
-    @State private var courses: [Course] = Course.testCourses
+    @Binding var viewModel: AdminViewModel
     
     var groupedCourses: [[Course]] {
-        courses.chunked(into: 4)
+        viewModel.courses.chunked(into: 4)
     }
     
     var body: some View {
@@ -20,7 +20,7 @@ struct CoursesPreview: View {
         VStack(spacing: 16) {
 
             NavigationLink {
-                CreateCourseView(courses: $courses)
+                CreateCourseView(viewModel: $viewModel)
             } label: {
 
                 HStack {
@@ -69,6 +69,9 @@ struct CoursesPreview: View {
 
         }
         .padding([.bottom, .horizontal])
+        .onAppear {
+            viewModel.fetchCourses()
+        }
     }
     
     // MARK: - Course Row
@@ -108,5 +111,5 @@ struct CoursesPreview: View {
 }
 
 #Preview {
-    CoursesPreview()
+    CoursesPreview(viewModel: .constant(.init()))
 }

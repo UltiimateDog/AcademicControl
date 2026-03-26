@@ -13,7 +13,7 @@ struct CreateCourseView: View {
     
     @State private var showCreateSheet = false
     
-    @Binding var courses: [Course]
+    @Binding var viewModel: AdminViewModel
 
     var body: some View {
 
@@ -21,7 +21,7 @@ struct CreateCourseView: View {
 
             Section {
 
-                ForEach($courses) { $course in
+                ForEach(viewModel.courses) { course in
 
                     HStack {
 
@@ -55,7 +55,7 @@ struct CreateCourseView: View {
                 }
 
             } header: {
-                Text("\(courses.count) Courses")
+                Text("\(viewModel.courses.count) Courses")
             }
             
             Button {
@@ -80,21 +80,21 @@ struct CreateCourseView: View {
                 TextField("Course name", text: $name)
 
                 Button("Create") {
-
-                    // TODO: Send course creation to backend
-
+                    viewModel.createCourse(name: name, professor: .init(id: "", name: "", email: "", role: .professor) )
                 }
-
             }
         }
         .onAppear {
-
-            // TODO: Fetch users from backend
-
+            viewModel.fetchUsers()
+        }
+        .alert("Error", isPresented: .constant(viewModel.errorMessage != nil)) {
+            Button("OK") { viewModel.errorMessage = nil }
+        } message: {
+            Text(viewModel.errorMessage ?? "")
         }
     }
 }
 
 #Preview {
-    CreateCourseView(courses: .constant([]))
+    CreateCourseView(viewModel: .constant(.init()))
 }
