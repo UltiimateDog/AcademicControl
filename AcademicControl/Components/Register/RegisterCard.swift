@@ -9,7 +9,7 @@ import SwiftUI
 
 struct RegisterCard: View {
     
-    @Environment(SessionStore.self) private var session
+    @Environment(Session.self) private var session
     
     @State private var name = ""
     @State private var email = ""
@@ -34,14 +34,10 @@ struct RegisterCard: View {
             }
             
             Button {
-                
                 withAnimation {
-                    session.login(email: email, password: password)
+                    session.register(email: email, password: password, name: name)
                 }
-                // TODO: Firebase register
-                
             } label: {
-                
                 Text("Register")
                     .frame(maxWidth: .infinity)
                     .padding()
@@ -60,17 +56,12 @@ struct RegisterCard: View {
             AuthDivider()
 
             AppleSignInButton {
-
                 // TODO: Firebase Apple Sign-In
                 print("Apple login tapped")
-
             }
 
             GoogleSignInButton {
-
-                // TODO: Firebase Google Sign-In
-                print("Google login tapped")
-
+                session.signInWithGoogle()
             }
         }
         .padding(30)
@@ -78,7 +69,6 @@ struct RegisterCard: View {
         .cornerRadius(16)
         .shadow(radius: 10)
         .padding(.horizontal, 24)
-        
     }
 }
 

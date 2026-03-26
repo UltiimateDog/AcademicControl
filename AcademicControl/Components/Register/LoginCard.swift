@@ -9,7 +9,7 @@ import SwiftUI
 
 struct LoginCard: View {
     
-    @Environment(SessionStore.self) private var session
+    @Environment(Session.self) private var session
 
     
     @State private var email = ""
@@ -62,8 +62,7 @@ struct LoginCard: View {
 
             GoogleSignInButton {
 
-                // TODO: Firebase Google Sign-In
-                print("Google login tapped")
+                session.signInWithGoogle()
 
             }
 

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct RootView: View {
 
-    @Environment(SessionStore.self) private var session
+    @Environment(Session.self) private var session
 
     var body: some View {
 
@@ -43,7 +43,7 @@ struct RootView: View {
 }
 
 #Preview {
-    @Previewable @State var session = SessionStore()
+    @Previewable @State var session = Session()
     
     RootView()
         .environment(session)

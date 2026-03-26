@@ -6,13 +6,34 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		AD61CA1D2F748EB100FE9F55 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = AD61CA1C2F748EB100FE9F55 /* FirebaseAuth */; };
+		AD61CA1F2F748EB100FE9F55 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = AD61CA1E2F748EB100FE9F55 /* FirebaseCore */; };
+		AD61CA212F748EB100FE9F55 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = AD61CA202F748EB100FE9F55 /* FirebaseFirestore */; };
+		AD61CA242F748EC700FE9F55 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = AD61CA232F748EC700FE9F55 /* GoogleSignIn */; };
+		AD61CA262F748EC700FE9F55 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = AD61CA252F748EC700FE9F55 /* GoogleSignInSwift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		62C0E7B42F5F11AF00927BBA /* AcademicControl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AcademicControl.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		AD61CA2B2F74919900FE9F55 /* Exceptions for "AcademicControl" folder in "AcademicControl" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 62C0E7B32F5F11AF00927BBA /* AcademicControl */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		62C0E7B62F5F11AF00927BBA /* AcademicControl */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				AD61CA2B2F74919900FE9F55 /* Exceptions for "AcademicControl" folder in "AcademicControl" target */,
+			);
 			path = AcademicControl;
 			sourceTree = "<group>";
 		};
@@ -23,6 +44,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AD61CA262F748EC700FE9F55 /* GoogleSignInSwift in Frameworks */,
+				AD61CA1F2F748EB100FE9F55 /* FirebaseCore in Frameworks */,
+				AD61CA242F748EC700FE9F55 /* GoogleSignIn in Frameworks */,
+				AD61CA1D2F748EB100FE9F55 /* FirebaseAuth in Frameworks */,
+				AD61CA212F748EB100FE9F55 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +91,11 @@
 			);
 			name = AcademicControl;
 			packageProductDependencies = (
+				AD61CA1C2F748EB100FE9F55 /* FirebaseAuth */,
+				AD61CA1E2F748EB100FE9F55 /* FirebaseCore */,
+				AD61CA202F748EB100FE9F55 /* FirebaseFirestore */,
+				AD61CA232F748EC700FE9F55 /* GoogleSignIn */,
+				AD61CA252F748EC700FE9F55 /* GoogleSignInSwift */,
 			);
 			productName = AcademicControl;
 			productReference = 62C0E7B42F5F11AF00927BBA /* AcademicControl.app */;
@@ -94,6 +125,10 @@
 			);
 			mainGroup = 62C0E7AB2F5F11AF00927BBA;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				AD61CA1B2F748EB100FE9F55 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				AD61CA222F748EC700FE9F55 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 62C0E7B52F5F11AF00927BBA /* Products */;
 			projectDirPath = "";
@@ -256,6 +291,7 @@
 				DEVELOPMENT_TEAM = 7VCTMF45GY;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AcademicControl/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -288,6 +324,7 @@
 				DEVELOPMENT_TEAM = 7VCTMF45GY;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AcademicControl/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -332,6 +369,53 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		AD61CA1B2F748EB100FE9F55 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.11.0;
+			};
+		};
+		AD61CA222F748EC700FE9F55 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		AD61CA1C2F748EB100FE9F55 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AD61CA1B2F748EB100FE9F55 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		AD61CA1E2F748EB100FE9F55 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AD61CA1B2F748EB100FE9F55 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		AD61CA202F748EB100FE9F55 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AD61CA1B2F748EB100FE9F55 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		AD61CA232F748EC700FE9F55 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AD61CA222F748EC700FE9F55 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		AD61CA252F748EC700FE9F55 /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AD61CA222F748EC700FE9F55 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 62C0E7AC2F5F11AF00927BBA /* Project object */;
 }
