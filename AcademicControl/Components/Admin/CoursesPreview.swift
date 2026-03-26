@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CoursesPreview: View {
     
-    @Binding var viewModel: AdminViewModel
+    @Bindable var viewModel: AdminViewModel
     
     var groupedCourses: [[Course]] {
         viewModel.courses.chunked(into: 4)
@@ -20,7 +20,7 @@ struct CoursesPreview: View {
         VStack(spacing: 16) {
 
             NavigationLink {
-                CreateCourseView(viewModel: $viewModel)
+                CreateCourseView(viewModel: viewModel)
             } label: {
 
                 HStack {
@@ -111,5 +111,5 @@ struct CoursesPreview: View {
 }
 
 #Preview {
-    CoursesPreview(viewModel: .constant(.init()))
+    CoursesPreview(viewModel: .init())
 }

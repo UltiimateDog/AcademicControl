@@ -18,10 +18,10 @@ struct AdminDashboardView: View {
             ScrollView {
                 VStack (spacing: 0) {
                     
-                    ManageUsersPreview(viewModel: $viewModel)
+                    ManageUsersPreview(viewModel: viewModel)
                         .frame(height: 460)
                     
-                    CoursesPreview(viewModel: $viewModel)
+                    CoursesPreview(viewModel: viewModel)
                         .frame(height: 460)
                     
                     LogoutButton()

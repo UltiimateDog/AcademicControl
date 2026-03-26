@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ManageUsersPreview: View {
     
-    @Binding var viewModel: AdminViewModel
+    @Bindable var viewModel: AdminViewModel
 
     var groupedUsers: [[User]] {
         viewModel.users.chunked(into: 4)
@@ -20,7 +20,7 @@ struct ManageUsersPreview: View {
         VStack(spacing: 16) {
 
             NavigationLink {
-                ManageUsersView(viewModel: $viewModel)
+                ManageUsersView(viewModel: viewModel)
             } label: {
 
                 HStack {
@@ -121,5 +121,5 @@ struct ManageUsersPreview: View {
 }
 
 #Preview {
-    ManageUsersPreview(viewModel: .constant(.init()))
+    ManageUsersPreview(viewModel: .init())
 }

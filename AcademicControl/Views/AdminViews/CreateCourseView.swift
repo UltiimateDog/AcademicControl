@@ -14,7 +14,9 @@ struct CreateCourseView: View {
     
     @State private var showCreateSheet = false
     
-    @Binding var viewModel: AdminViewModel
+    @State private var selectedCourse: Course?
+    
+    @Bindable var viewModel: AdminViewModel
 
     var body: some View {
 
@@ -24,24 +26,24 @@ struct CreateCourseView: View {
 
                 ForEach(viewModel.courses) { course in
 
-                    HStack {
+                    Button {
+                        selectedCourse = course
+                    } label: {
+                        HStack {
 
-                        VStack(alignment: .leading, spacing: 4) {
+                            VStack(alignment: .leading, spacing: 4) {
 
-                            Text(course.name)
-                                .fontWeight(.medium)
+                                Text(course.name)
+                                    .fontWeight(.medium)
 
-                            Text(course.professorName)
-                                .font(.caption)
-                                .foregroundColor(.secondary)
+                                Text(course.professorName)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
 
-                        }
+                            }
 
-                        Spacer()
+                            Spacer()
 
-                        Button {
-                            
-                        } label: {
                             Text("\(course.students.count) Students")
                                 .font(.caption)
                                 .padding(.horizontal, 10)
@@ -49,7 +51,6 @@ struct CreateCourseView: View {
                                 .background(.accent.opacity(0.2))
                                 .clipShape(Capsule())
                         }
-                        
                     }
                     .padding(.vertical, 4)
 
@@ -75,6 +76,9 @@ struct CreateCourseView: View {
         }
         .listStyle(.insetGrouped)
         .navigationTitle("Courses")
+        .sheet(item: $selectedCourse) { course in
+            EditCourseView(course: course, viewModel: viewModel)
+        }
         .sheet(isPresented: $showCreateSheet) {
             Form {
 
@@ -143,5 +147,5 @@ struct CreateCourseView: View {
 }
 
 #Preview {
-    CreateCourseView(viewModel: .constant(.init()))
+    CreateCourseView(viewModel: .init())
 }

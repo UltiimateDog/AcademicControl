@@ -10,7 +10,7 @@ import FirebaseAuth
 
 struct ManageUsersView: View {
 
-    @Binding var viewModel: AdminViewModel
+    @Bindable var viewModel: AdminViewModel
 
     var body: some View {
 
@@ -104,6 +104,6 @@ struct ManageUsersView: View {
 
 #Preview {
     NavigationStack {
-        ManageUsersView(viewModel: .constant(.init()))
+        ManageUsersView(viewModel: .init())
     }
 }

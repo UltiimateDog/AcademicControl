@@ -107,6 +107,22 @@ class AdminViewModel {
         }
     }
     
+    func updateCourse(course: Course, name: String, professor: User, students: [String]) {
+        db.collection("courses").document(course.id).updateData([
+            "name": name,
+            "professorId": professor.id,
+            "professorName": professor.name,
+            "students": students
+        ]) { error in
+            if let error = error {
+                self.errorMessage = error.localizedDescription
+                return
+            }
+
+            self.fetchCourses()
+        }
+    }
+    
     // MARK: - Add Student to Course
     func addStudent(to course: Course, studentId: String) {
         let ref = db.collection("courses").document(course.id)
