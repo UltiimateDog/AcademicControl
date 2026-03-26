@@ -77,12 +77,34 @@ class AdminViewModel {
             self.courses = snapshot?.documents.compactMap { doc in
                 let data = doc.data()
                 
+                let schedulesData = data["scheduleItems"] as? [[String: Any]] ?? []
+
+                let schedules = schedulesData.compactMap { item -> ScheduleItem? in
+                    guard let weekdayRaw = item["weekday"] as? Int,
+                          let weekday = Weekday(rawValue: weekdayRaw),
+                          let startHour = item["startHour"] as? Int,
+                          let startMinute = item["startMinute"] as? Int,
+                          let endHour = item["endHour"] as? Int,
+                          let endMinute = item["endMinute"] as? Int
+                    else { return nil }
+
+                    return ScheduleItem(
+                        courseName: item["courseName"] as? String ?? (data["name"] as? String ?? ""),
+                        weekday: weekday,
+                        startHour: startHour,
+                        startMinute: startMinute,
+                        endHour: endHour,
+                        endMinute: endMinute
+                    )
+                }
+                
                 return Course(
                     id: doc.documentID,
                     name: data["name"] as? String ?? "",
                     professorId: data["professorId"] as? String ?? "",
                     professorName: data["professorName"] as? String ?? "",
-                    students: data["students"] as? [String] ?? []
+                    students: data["students"] as? [String] ?? [],
+                    scheduleItems: schedules
                 )
             } ?? []
         }
@@ -107,12 +129,31 @@ class AdminViewModel {
         }
     }
     
-    func updateCourse(course: Course, name: String, professor: User, students: [String]) {
+    func updateCourse(
+        course: Course,
+        name: String,
+        professor: User,
+        students: [String],
+        scheduleItems: [ScheduleItem]
+    ) {
+
+        let scheduleData = scheduleItems.map { item in
+            [
+                "courseName": item.courseName,
+                "weekday": item.weekday.rawValue,
+                "startHour": item.startHour,
+                "startMinute": item.startMinute,
+                "endHour": item.endHour,
+                "endMinute": item.endMinute
+            ]
+        }
+
         db.collection("courses").document(course.id).updateData([
             "name": name,
             "professorId": professor.id,
             "professorName": professor.name,
-            "students": students
+            "students": students,
+            "scheduleItems": scheduleData
         ]) { error in
             if let error = error {
                 self.errorMessage = error.localizedDescription

@@ -17,6 +17,9 @@ struct EditCourseView: View {
     @State private var name: String
     @State private var selectedProfessor: User?
     @State private var selectedStudents: Set<String>
+    
+    @State private var scheduleItems: [ScheduleItem]
+    @State private var showingAddSchedule = false
 
     init(course: Course, viewModel: AdminViewModel) {
         self.course = course
@@ -25,6 +28,7 @@ struct EditCourseView: View {
         _name = State(initialValue: course.name)
         _selectedStudents = State(initialValue: Set(course.students))
         _selectedProfessor = State(initialValue: nil)
+        _scheduleItems = State(initialValue: course.scheduleItems)
     }
 
     var body: some View {
@@ -53,6 +57,33 @@ struct EditCourseView: View {
                         Text("Selected: \(selectedProfessor.name)")
                             .font(.caption)
                             .foregroundColor(.secondary)
+                    }
+                }
+                
+                Section("Schedule") {
+
+                    if scheduleItems.isEmpty {
+                        Text("No schedule added")
+                            .foregroundColor(.secondary)
+                    }
+
+                    ForEach(scheduleItems) { item in
+                        VStack(alignment: .leading) {
+
+                            Text(item.weekday.name)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+
+                            Text(item.timeString)
+                                .fontWeight(.medium)
+                        }
+                    }
+                    .onDelete { indexSet in
+                        scheduleItems.remove(atOffsets: indexSet)
+                    }
+
+                    Button("Add Schedule Item") {
+                        showingAddSchedule = true
                     }
                 }
 
@@ -84,13 +115,24 @@ struct EditCourseView: View {
                         course: course,
                         name: name,
                         professor: professor,
-                        students: Array(selectedStudents)
+                        students: Array(selectedStudents),
+                        scheduleItems: scheduleItems
                     )
 
                     dismiss()
                 }
             }
             .navigationTitle("Edit Course")
+            .sheet(isPresented: $showingAddSchedule) {
+                AddScheduleItemView { newItem in
+
+                    // Ensure courseName stays consistent
+                    var item = newItem
+                    item.courseName = name
+
+                    scheduleItems.append(item)
+                }
+            }
             .onAppear {
                 // Set initial professor
                 selectedProfessor = viewModel.users.first {
