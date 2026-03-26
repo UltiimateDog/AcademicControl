@@ -22,6 +22,8 @@ struct AdminDashboardView: View {
                     CoursesPreview()
                         .frame(height: 460)
                     
+                    LogoutButton()
+                        .padding()
                 }
                 
             }
@@ -34,5 +36,8 @@ struct AdminDashboardView: View {
 }
 
 #Preview {
+    @Previewable @State var session = Session()
+    
     AdminDashboardView()
+        .environment(session)
 }

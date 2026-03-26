@@ -33,7 +33,11 @@ struct ProfessorDashboardView: View {
                     } else {
                         SchedulePreview(schedule: schedule)
                     }
-
+                    
+                    SchedulePreview(schedule: schedule)
+                    
+                    LogoutButton()
+                        .padding()
                 }
                 .padding()
 

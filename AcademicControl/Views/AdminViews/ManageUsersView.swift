@@ -6,10 +6,11 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 struct ManageUsersView: View {
 
-    @State private var viewModel = AdminViewModel()
+    @Binding var viewModel: AdminViewModel
 
     var body: some View {
 
@@ -103,6 +104,6 @@ struct ManageUsersView: View {
 
 #Preview {
     NavigationStack {
-        ManageUsersView()
+        ManageUsersView(viewModel: .constant(.init()))
     }
 }
