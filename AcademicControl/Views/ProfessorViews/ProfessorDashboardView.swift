@@ -6,37 +6,31 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 struct ProfessorDashboardView: View {
 
-    @Environment(Session.self) private var session
-
-    @State private var viewModel = ProfessorViewModel()
-    @State var schedule: [ScheduleItem] = ScheduleItem.testSchedule
+    @State private var schedule: [ScheduleItem] = []
+    @State private var isLoading = true
+    private let viewModel = CourseViewModel()
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 20) {
 
-                    // ── Loading / error ──
-                    if viewModel.isLoading {
-                        ProgressView("Loading courses…")
-                            .padding()
-                    } else if let error = viewModel.errorMessage {
-                        Text("Error: \(error)")
-                            .foregroundStyle(.red)
-                            .font(.caption)
-                            .padding()
-                    }
-
-                    // ── Cámara card con cursos reales ──
-                    CamaraCard(courses: viewModel.courses)
+                    // CamaraCard carga sus propios cursos internamente
+                    CamaraCard()
 
                     AssignGradesPreview()
                         .frame(height: 370)
 
-                    SchedulePreview(schedule: schedule)
+                    if isLoading {
+                        ProgressView("Loading schedule...")
+                            .padding()
+                    } else {
+                        SchedulePreview(schedule: schedule)
+                    }
 
                     LogoutButton()
                         .padding()
@@ -46,17 +40,20 @@ struct ProfessorDashboardView: View {
             .scrollIndicators(.hidden)
             .background(Color.background)
             .navigationTitle("Professor")
-            .onAppear {
-                if let uid = session.currentUser?.id {
-                    viewModel.fetchCourses(professorId: uid)
-                }
-            }
+            .onAppear { loadSchedule() }
+        }
+    }
+
+    private func loadSchedule() {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        isLoading = true
+        viewModel.fetchScheduleForProfessor(uid: uid) { items in
+            self.schedule = items
+            self.isLoading = false
         }
     }
 }
 
 #Preview {
-    @Previewable @State var session = Session()
     ProfessorDashboardView()
-        .environment(session)
 }

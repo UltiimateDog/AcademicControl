@@ -5,12 +5,13 @@
 //  Created by Ultiimate Dog on 09/03/26.
 //
 
+
 import SwiftUI
 import FirebaseAuth
 
 struct ManageUsersView: View {
 
-    @State private var viewModel = AdminViewModel()
+    @Bindable var viewModel: AdminViewModel
 
     var body: some View {
 
@@ -49,8 +50,6 @@ struct ManageUsersView: View {
         .listStyle(.insetGrouped)
         .navigationTitle("Users")
         .onAppear {
-            print(Auth.auth().currentUser?.uid ?? "No user")
-            
             viewModel.fetchUsers()
         }
         .alert("Error", isPresented: .constant(viewModel.errorMessage != nil)) {
@@ -63,23 +62,11 @@ struct ManageUsersView: View {
     // MARK: - Role Selector
 
     func roleSelector(user: User) -> some View {
-
         Menu {
-
-            Button("Student") {
-                viewModel.updateRole(for: user, to: .student)
-            }
-
-            Button("Professor") {
-                viewModel.updateRole(for: user, to: .professor)
-            }
-
-            Button("Admin") {
-                viewModel.updateRole(for: user, to: .admin)
-            }
-
+            Button("Student")   { viewModel.updateRole(for: user, to: .student) }
+            Button("Professor") { viewModel.updateRole(for: user, to: .professor) }
+            Button("Admin")     { viewModel.updateRole(for: user, to: .admin) }
         } label: {
-
             HStack(spacing: 4) {
                 Text(user.role.rawValue.capitalized)
                     .font(.caption)
@@ -97,15 +84,15 @@ struct ManageUsersView: View {
 
     func roleColor(_ role: User.Role) -> Color {
         switch role {
-        case .admin:    return .red
+        case .admin:     return .red
         case .professor: return .blue
-        case .student:  return .accent
+        case .student:   return .accent
         }
     }
 }
 
 #Preview {
     NavigationStack {
-        ManageUsersView()
+        ManageUsersView(viewModel: .init())
     }
 }

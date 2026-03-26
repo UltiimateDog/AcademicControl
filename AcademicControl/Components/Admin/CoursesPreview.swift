@@ -8,36 +8,29 @@
 import SwiftUI
 
 struct CoursesPreview: View {
-    
-    @State private var courses: [Course] = Course.testCourses
-    
-    var groupedCourses: [[Course]] {
-        courses.chunked(into: 4)
-    }
-    
-    var body: some View {
 
+    @Bindable var viewModel: AdminViewModel
+
+    var groupedCourses: [[Course]] {
+        viewModel.courses.chunked(into: 4)
+    }
+
+    var body: some View {
         VStack(spacing: 16) {
 
             NavigationLink {
-                CreateCourseView(courses: $courses)
+                // Pasa el mismo AdminViewModel para evitar lecturas duplicadas a Firestore
+                CreateCourseView(viewModel: viewModel)
             } label: {
-
                 HStack {
-
                     VStack(alignment: .leading, spacing: 4) {
-
                         Text("Manage Courses")
                             .font(.headline)
-
                         Text("Create and Edit")
                             .font(.caption)
                             .foregroundColor(.secondary)
-
                     }
-
                     Spacer()
-
                     Image(systemName: "chevron.right")
                         .foregroundColor(.secondary)
                 }
@@ -48,55 +41,45 @@ struct CoursesPreview: View {
                 )
             }
 
-            TabView {
-
-                ForEach(groupedCourses.indices, id: \.self) { index in
-
-                    VStack(spacing: 12) {
-
-                        ForEach(groupedCourses[index]) { course in
-                            courseRow(course)
+            if viewModel.isLoading {
+                HStack { Spacer(); ProgressView(); Spacer() }
+            } else {
+                TabView {
+                    ForEach(groupedCourses.indices, id: \.self) { index in
+                        VStack(spacing: 12) {
+                            ForEach(groupedCourses[index]) { course in
+                                courseRow(course)
+                            }
+                            Spacer()
                         }
-
-                        Spacer()
+                        .padding(5)
                     }
-                    .padding(5)
                 }
-
-
+                .tabViewStyle(.page)
             }
-            .tabViewStyle(.page)
-
         }
         .padding([.bottom, .horizontal])
+        .onAppear {
+            viewModel.fetchCourses()
+        }
     }
-    
-    // MARK: - Course Row
-    
+
     func courseRow(_ course: Course) -> some View {
-
         HStack {
-
             VStack(alignment: .leading, spacing: 4) {
-
                 Text(course.name)
                     .fontWeight(.medium)
-
-                Text(course.professorName)
+                Text(course.professorName.isEmpty ? "No professor" : course.professorName)
                     .font(.caption)
                     .foregroundColor(.secondary)
-
             }
-
             Spacer()
-
             Text("\(course.students.count) Students")
                 .font(.caption)
                 .padding(.horizontal, 10)
                 .padding(.vertical, 4)
                 .background(.accent.opacity(0.2))
                 .clipShape(Capsule())
-            
         }
         .padding()
         .background(
@@ -108,5 +91,5 @@ struct CoursesPreview: View {
 }
 
 #Preview {
-    CoursesPreview()
+    CoursesPreview(viewModel: .init())
 }

@@ -5,14 +5,15 @@
 //  Created by Ultiimate Dog on 09/03/26.
 //
 
+
 import SwiftUI
 
 struct ManageUsersPreview: View {
 
-    @State var users: [User] = User.testUsers
+    @Bindable var viewModel: AdminViewModel
 
     var groupedUsers: [[User]] {
-        users.chunked(into: 4)
+        viewModel.users.chunked(into: 4)
     }
 
     var body: some View {
@@ -20,24 +21,17 @@ struct ManageUsersPreview: View {
         VStack(spacing: 16) {
 
             NavigationLink {
-                ManageUsersView()
+                ManageUsersView(viewModel: viewModel)
             } label: {
-
                 HStack {
-
                     VStack(alignment: .leading, spacing: 4) {
-
                         Text("Manage Users")
                             .font(.headline)
-
                         Text("Students and professors")
                             .font(.caption)
                             .foregroundColor(.secondary)
-
                     }
-
                     Spacer()
-
                     Image(systemName: "chevron.right")
                         .foregroundColor(.secondary)
                 }
@@ -48,45 +42,39 @@ struct ManageUsersPreview: View {
                 )
             }
 
-            TabView {
-
-                ForEach(groupedUsers.indices, id: \.self) { index in
-
-                    VStack(spacing: 12) {
-
-                        ForEach(groupedUsers[index]) { user in
-                            userRow(user)
+            if viewModel.isLoading {
+                HStack { Spacer(); ProgressView(); Spacer() }
+            } else {
+                TabView {
+                    ForEach(groupedUsers.indices, id: \.self) { index in
+                        VStack(spacing: 12) {
+                            ForEach(groupedUsers[index]) { user in
+                                userRow(user)
+                            }
+                            Spacer()
                         }
-
-                        Spacer()
+                        .padding(5)
                     }
-                    .padding(5)
                 }
-
+                .tabViewStyle(.page)
             }
-            .tabViewStyle(.page)
-
         }
         .padding([.top, .horizontal])
+        .onAppear {
+            viewModel.fetchUsers()
+        }
     }
 
     func userRow(_ user: User) -> some View {
-
         HStack {
-
             VStack(alignment: .leading, spacing: 4) {
-
                 Text(user.name)
                     .fontWeight(.medium)
-
                 Text(user.email)
                     .font(.caption)
                     .foregroundColor(.secondary)
-
             }
-
             Spacer()
-
             roleBadge(user.role)
         }
         .padding()
@@ -98,7 +86,6 @@ struct ManageUsersPreview: View {
     }
 
     func roleBadge(_ role: User.Role) -> some View {
-
         Text(role.rawValue.capitalized)
             .font(.caption)
             .padding(.horizontal, 10)
@@ -109,5 +96,5 @@ struct ManageUsersPreview: View {
 }
 
 #Preview {
-    ManageUsersPreview()
+    ManageUsersPreview(viewModel: .init())
 }

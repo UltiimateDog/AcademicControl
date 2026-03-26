@@ -17,7 +17,6 @@ class ProfessorViewModel {
 
     private let db = Firestore.firestore()
 
-    // MARK: - Fetch courses where professorId == current user
     func fetchCourses(professorId: String) {
         isLoading = true
         db.collection("courses")
@@ -35,7 +34,8 @@ class ProfessorViewModel {
                         name: data["name"] as? String ?? "",
                         professorId: data["professorId"] as? String ?? "",
                         professorName: data["professorName"] as? String ?? "",
-                        students: data["students"] as? [String] ?? []
+                        students: data["students"] as? [String] ?? [],
+                        scheduleItems: []           // ← agregado
                     )
                 } ?? []
             }

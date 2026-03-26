@@ -14,38 +14,44 @@ struct Course: Identifiable {
     var professorId: String
     var professorName: String
     var students: [String]
-    
+    var scheduleItems: [ScheduleItem]           // ← agregado
+
     static let testCourses = [
         Course(id: "1",
                name: "Course 1",
                professorId: "2",
                professorName: "Edwin",
-               students: ["Student B", "Student A"]),
+               students: ["Student B", "Student A"],
+               scheduleItems: []),
         Course(id: "2",
                name: "Course 2",
                professorId: "2",
                professorName: "Edwin",
-               students: ["Student B", "Student A"]),
+               students: ["Student B", "Student A"],
+               scheduleItems: []),
         Course(id: "3",
                name: "Course 3",
                professorId: "2",
                professorName: "Edwin",
-               students: ["Student B", "Student A"]),
+               students: ["Student B", "Student A"],
+               scheduleItems: []),
         Course(id: "4",
                name: "Course 4",
                professorId: "2",
                professorName: "Edwin",
-               students: ["Student B", "Student A"]),
+               students: ["Student B", "Student A"],
+               scheduleItems: []),
         Course(id: "5",
                name: "Course 5",
                professorId: "2",
                professorName: "Edwin",
-               students: ["Student B", "Student A"]),
+               students: ["Student B", "Student A"],
+               scheduleItems: []),
         Course(id: "6",
                name: "Course 6",
                professorId: "2",
                professorName: "Edwin",
-               students: ["Student B", "Student A"]),
+               students: ["Student B", "Student A"],
+               scheduleItems: []),
     ]
-    
 }

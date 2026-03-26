@@ -6,14 +6,16 @@
 //
 
 import SwiftUI
+import FirebaseAuth
+import FirebaseFirestore
 
 struct CamaraCard: View {
 
-    // Recibe los cursos del profesor desde ProfessorDashboardView
-    let courses: [Course]
-
+    @State private var courses: [Course] = []
     @State private var selectedCourse: Course? = nil
     @State private var showPicker = false
+
+    private let db = Firestore.firestore()
 
     var body: some View {
         VStack(spacing: 16) {
@@ -57,15 +59,13 @@ struct CamaraCard: View {
                 .foregroundStyle(.primary)
                 .confirmationDialog("Select a course", isPresented: $showPicker, titleVisibility: .visible) {
                     ForEach(courses) { course in
-                        Button(course.name) {
-                            selectedCourse = course
-                        }
+                        Button(course.name) { selectedCourse = course }
                     }
                     Button("Cancel", role: .cancel) {}
                 }
             }
 
-            // ── Scan button (only active when a course is selected) ──
+            // ── Botón de escaneo ──
             if let course = selectedCourse {
                 NavigationLink {
                     QRScannerCameraView(
@@ -85,7 +85,7 @@ struct CamaraCard: View {
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
             } else {
-                // Disabled state
+                // Estado desactivado
                 HStack {
                     Image(systemName: "camera")
                     Text("Start Scanning")
@@ -104,12 +104,42 @@ struct CamaraCard: View {
             RoundedRectangle(cornerRadius: 20)
                 .fill(Color(.systemGray6))
         )
+        .onAppear { loadCourses() }
+    }
+
+    // MARK: - Fetch courses where professorId == current user
+
+    private func loadCourses() {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+
+        db.collection("courses")
+            .whereField("professorId", isEqualTo: uid)
+            .getDocuments { snapshot, error in
+                guard let docs = snapshot?.documents else { return }
+                DispatchQueue.main.async {
+                    self.courses = docs.compactMap { doc in
+                        let data = doc.data()
+                        return Course(
+                            id: doc.documentID,
+                            name: data["name"] as? String ?? "",
+                            professorId: data["professorId"] as? String ?? "",
+                            professorName: data["professorName"] as? String ?? "",
+                            students: data["students"] as? [String] ?? [],
+                            scheduleItems: []
+                        )
+                    }
+                    // Si solo tiene un curso, lo selecciona automáticamente
+                    if self.courses.count == 1 {
+                        self.selectedCourse = self.courses.first
+                    }
+                }
+            }
     }
 }
 
 #Preview {
     NavigationStack {
-        CamaraCard(courses: Course.testCourses)
+        CamaraCard()
             .padding()
     }
 }

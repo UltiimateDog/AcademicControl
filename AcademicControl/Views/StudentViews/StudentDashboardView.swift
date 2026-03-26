@@ -6,27 +6,24 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 struct StudentDashboardView: View {
 
     @Environment(Session.self) private var session
 
-    @State var grades: [Grade] = [
-        Grade(id: "1", courseName: "Math", studentName: "You", value: 95),
-        Grade(id: "2", courseName: "Physics", studentName: "You", value: 88),
-        Grade(id: "3", courseName: "Chemistry", studentName: "You", value: 75),
-        Grade(id: "4", courseName: "Arts", studentName: "You", value: 82),
-        Grade(id: "5", courseName: "Calculus", studentName: "You", value: 69)
-    ]
-
-    @State var schedule: [ScheduleItem] = ScheduleItem.testSchedule
+    @State private var grades: [Grade] = []
+    @State private var schedule: [ScheduleItem] = []
+    @State private var isLoading = true
     @State private var scrollOffset: Double = 0
+    private let viewModel = CourseViewModel()
 
-    // Materia activa ahora mismo (la que toca según horario actual)
+    // Materia que toca en este momento según el horario cargado
     private var currentCourse: ScheduleItem? {
-        let now = Calendar.current.dateComponents([.weekday, .hour, .minute], from: Date())
-        // Calendar: domingo=1, lunes=2 … ajustamos al enum Weekday
-        let weekdayRaw = ((now.weekday ?? 1) - 1) % 7  // 0=dom, 1=lun…
+        let cal = Calendar.current
+        let now = cal.dateComponents([.weekday, .hour, .minute], from: Date())
+        // Calendar: dom=1, lun=2 … Weekday enum: lun=1, mar=2 …
+        let weekdayRaw = ((now.weekday ?? 2) - 1) == 0 ? 7 : (now.weekday ?? 2) - 1
         let currentMinutes = (now.hour ?? 0) * 60 + (now.minute ?? 0)
 
         return schedule.first { item in
@@ -41,7 +38,7 @@ struct StudentDashboardView: View {
             ScrollView {
                 VStack(spacing: 20) {
 
-                    // ── QR Header con datos reales ──
+                    // ── QR con datos reales del alumno ──
                     if let user = session.currentUser {
                         QRHeader(
                             offset: scrollOffset,
@@ -52,9 +49,13 @@ struct StudentDashboardView: View {
                         )
                     }
 
-                    GradesSummaryCard(grades: grades)
-
-                    SchedulePreview(schedule: schedule)
+                    if isLoading {
+                        ProgressView("Loading...")
+                            .padding()
+                    } else {
+                        GradesSummaryCard(grades: grades)
+                        SchedulePreview(schedule: schedule)
+                    }
 
                     LogoutButton()
                         .padding()
@@ -69,12 +70,32 @@ struct StudentDashboardView: View {
             } action: { _, newValue in
                 scrollOffset = newValue
             }
+            .onAppear { loadData() }
         }
+    }
+
+    private func loadData() {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        isLoading = true
+        let group = DispatchGroup()
+
+        group.enter()
+        viewModel.fetchScheduleForStudent(uid: uid) { items in
+            self.schedule = items
+            group.leave()
+        }
+
+        group.enter()
+        viewModel.fetchGradesForStudent(uid: uid) { fetchedGrades in
+            self.grades = fetchedGrades
+            group.leave()
+        }
+
+        group.notify(queue: .main) { self.isLoading = false }
     }
 }
 
 #Preview {
     @Previewable @State var session = Session()
-    StudentDashboardView()
-        .environment(session)
+    StudentDashboardView().environment(session)
 }

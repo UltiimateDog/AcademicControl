@@ -7,9 +7,9 @@
 
 import Foundation
 
-struct User: Identifiable {
+struct User: Identifiable, Hashable {
 
-    enum Role: String, Codable {
+    enum Role: String, Codable, Hashable {
         case admin
         case professor
         case student
@@ -19,7 +19,7 @@ struct User: Identifiable {
     var name: String
     var email: String
     var role: Role
-    
+
     static let testUsers: [User] = [
         User(id: "1", name: "Alice", email: "alice@mail.com", role: .student),
         User(id: "2", name: "Bob", email: "bob@mail.com", role: .professor),
