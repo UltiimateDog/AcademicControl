@@ -15,7 +15,6 @@ struct QRHeader: View {
     let minQR: CGFloat = 120
 
     private var qrSize: CGFloat {
-        print(offset)
         let shrink = max(0, offset)
         return max(maxQR - shrink, minQR)
     }

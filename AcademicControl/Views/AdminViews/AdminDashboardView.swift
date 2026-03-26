@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct AdminDashboardView: View {
+    
+    @State private var viewModel = AdminViewModel()
 
     var body: some View {
         
@@ -16,10 +18,10 @@ struct AdminDashboardView: View {
             ScrollView {
                 VStack (spacing: 0) {
                     
-                    ManageUsersPreview()
+                    ManageUsersPreview(viewModel: viewModel)
                         .frame(height: 460)
                     
-                    CoursesPreview()
+                    CoursesPreview(viewModel: viewModel)
                         .frame(height: 460)
                     
                     LogoutButton()
@@ -36,5 +38,8 @@ struct AdminDashboardView: View {
 }
 
 #Preview {
+    @Previewable @State var session = Session()
+    
     AdminDashboardView()
+        .environment(session)
 }
